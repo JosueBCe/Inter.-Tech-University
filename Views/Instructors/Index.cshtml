@@ -45,12 +45,11 @@
                     }
                 </td>
                 <td>
-                    @foreach (var course in item.CourseAssignments)
-                    {
+                
                         <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-secondary m-1">Edit</a>
                         <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-secondary m-1">Details</a>
                         <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger m-1">Delete</a>
-                    }
+                    
                 </td>
             </tr>
         }

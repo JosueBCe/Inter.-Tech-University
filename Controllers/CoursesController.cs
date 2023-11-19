@@ -126,14 +126,13 @@ namespace ContosoUniversity.Controllers
             return View(courseToUpdate);
         }
 
-        private void PopulateDepartmentsDropDownList(object selectedDepartment = null!)
+        private void PopulateDepartmentsDropDownList(int? selectedDepartment = null!)
         {
             var departmentsQuery = from d in _context.Departments
                                    orderby d.Name
                                    select d;
             ViewBag.DepartmentID = new SelectList(departmentsQuery.AsNoTracking(), "DepartmentID", "Name", selectedDepartment);
         }
-
 
         // GET: Courses/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -160,16 +159,16 @@ namespace ContosoUniversity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            Instructor instructor = await _context.Instructors
+            Course courses = await _context.Courses
                 .Include(i => i.CourseAssignments)
-                .SingleAsync(i => i.ID == id);
+                .SingleAsync(i => i.CourseID == id);
 
             var departments = await _context.Departments
                 .Where(d => d.InstructorID == id)
                 .ToListAsync();
             departments.ForEach(d => d.InstructorID = null);
 
-            _context.Instructors.Remove(instructor);
+            _context.Courses.Remove(courses);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

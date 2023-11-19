@@ -214,16 +214,28 @@ namespace ContosoUniversity.Controllers
         {
             try
             {
-                if (await _context.Departments.AnyAsync(m => m.DepartmentID == department.DepartmentID))
+                var departmentToDelete = await _context.Departments
+                    .Include(d => d.Courses) // Include the Courses navigation property
+                    .FirstOrDefaultAsync(m => m.DepartmentID == department.DepartmentID);
+
+                if (departmentToDelete == null)
                 {
-                    _context.Departments.Remove(department);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
+
+                if (departmentToDelete.Courses.Any())
+                {
+                    _context.Courses.RemoveRange(departmentToDelete.Courses); // Remove all related courses
+                }
+
+                _context.Departments.Remove(departmentToDelete);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException /* ex */)
             {
-                //Log the error (uncomment ex variable name and write a log.)
+                // Log the error (uncomment ex variable name and write a log.)
                 return RedirectToAction(nameof(Delete), new { concurrencyError = true, id = department.DepartmentID });
             }
         }

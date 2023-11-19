@@ -220,7 +220,7 @@ namespace ContosoUniversity.Controllers
             }
         }
         // GET: Instructors/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id ,bool? saveChangesError = false)
         {
             if (id == null || _context.Instructors == null)
             {
@@ -228,10 +228,18 @@ namespace ContosoUniversity.Controllers
             }
 
             var instructor = await _context.Instructors
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (instructor == null)
             {
                 return NotFound();
+            }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] =
+                    "Delete failed. Try again, and if the problem persists " +
+                    "see your system administrator.";
             }
 
             return View(instructor);
@@ -241,19 +249,33 @@ namespace ContosoUniversity.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
+
         {
+            var instructor = await _context.Instructors.FindAsync(id);
             if (_context.Instructors == null)
             {
                 return Problem("Entity set 'SchoolContext.Instructors'  is null.");
             }
-            var instructor = await _context.Instructors.FindAsync(id);
-            if (instructor != null)
+
+            try
             {
                 _context.Instructors.Remove(instructor);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.)
+                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            //if (instructor != null)
+            //{
+            //    _context.Instructors.Remove(instructor);
+            //}
+
+            //await _context.SaveChangesAsync();
+            //return RedirectToAction(nameof(Index));
         }
 
         private bool InstructorExists(int id)
