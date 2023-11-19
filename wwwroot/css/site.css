@@ -1,5 +1,14 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital@1&family=Playpen+Sans:wght@300&family=Ubuntu&display=swap');
+
 html {
-  font-size: 14px;
+    font-size: 14px;
+
+}
+body {
+    font-family: 'Nunito', sans-serif;
+    font-family: 'Playpen Sans', cursive;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 @media (min-width: 768px) {
@@ -15,4 +24,22 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+input[type=text], input[type=number], input[type=date], select{
+
+    border: 2px solid;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(to right, red, orange, green, blue, indigo, violet);
+    background-clip: padding-box;
+    padding: 5px;
+    font-size: 16px;
+}
+#InstructorID,#DepartmentID{
+border: 2px solid;
+border-image-slice: 1;
+border-image-source: linear-gradient(to right,green, blue, indigo, violet,red, orange );
+background-clip: padding-box;
+padding: 5px;
+font-size: 16px;
 }

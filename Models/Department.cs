@@ -10,7 +10,7 @@ namespace ContosoUniversity.Models
         public int DepartmentID { get; set; }
 
         [StringLength(50, MinimumLength = 3)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [DataType(DataType.Currency)]
         [Column(TypeName = "money")]
@@ -24,6 +24,7 @@ namespace ContosoUniversity.Models
         public int? InstructorID { get; set; }
 
         [Timestamp]
+        [Display(Name = "Row Version")]
         public byte[]? RowVersion { get; set; }
 
         public Instructor? Administrator { get; set; }

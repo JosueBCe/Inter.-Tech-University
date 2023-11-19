@@ -7,9 +7,9 @@
 <h2>Instructors</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-dark">Create New</a>
 </p>
-<table class="table">
+<table class="table table-dark table-hover">
     <thead>
         <tr>
             <th>Last Name</th>
@@ -47,14 +47,10 @@
                 <td>
                     @foreach (var course in item.CourseAssignments)
                     {
-                        @course.Course?.CourseID <span></span> @course.Course?.Title <br />
+                        <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-secondary m-1">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-secondary m-1">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger m-1">Delete</a>
                     }
-                </td>
-                <td>
-                    <a asp-action="Index" asp-route-id="@item.ID">Select</a> |
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                 </td>
             </tr>
         }
@@ -62,60 +58,60 @@
 </table>
 @if (Model.Courses != null)
 {
-    <h3>Courses Taught by Selected Instructor</h3>
-    <table class="table">
-        <tr>
-            <th></th>
-            <th>Number</th>
-            <th>Title</th>
-            <th>Department</th>
-        </tr>
+<h3>Courses Taught by Selected Instructor</h3>
+<table class="table table-dark table-hover">
+    <tr>
+        <th></th>
+        <th>Number</th>
+        <th>Title</th>
+        <th>Department</th>
+    </tr>
 
-        @foreach (var item in Model.Courses)
-        {
-            string selectedRow = "";
-            if (item.CourseID == (int?)ViewData["CourseID"])
-            {
-                selectedRow = "success";
-            }
-            <tr class="@selectedRow">
-                <td>
-                    @Html.ActionLink("Select", "Index", new { courseID = item.CourseID })
-                </td>
-                <td>
-                    @item.CourseID
-                </td>
-                <td>
-                    @item.Title
-                </td>
-                <td>
-                    @item.Department?.Name
-                </td>
-            </tr>
-        }
-
-    </table>
-    @if (Model.Enrollments != null)
+    @foreach (var item in Model.Courses)
     {
-        <h3>
-            Students Enrolled in Selected Course
-        </h3>
-        <table class="table">
-            <tr>
-                <th>Name</th>
-                <th>Grade</th>
-            </tr>
-            @foreach (var item in Model.Enrollments)
-            {
-                <tr>
-                    <td>
-                        @item.Student.FullName
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Grade)
-                    </td>
-                </tr>
-            }
-        </table>
+    string selectedRow = "";
+    if (item.CourseID == (int?) ViewData["CourseID"])
+    {
+    selectedRow = "table-success";
     }
+    <tr class="@selectedRow">
+        <td>
+            @Html.ActionLink("Select", "Index", new { courseID = item.CourseID }, new { @class = "btn btn-primary" })
+        </td>
+        <td>
+            @item.CourseID
+        </td>
+        <td>
+            @item.Title
+        </td>
+        <td>
+            @item.Department?.Name
+        </td>
+    </tr>
+    }
+
+</table>
+    @if (Model.Enrollments != null)
+{
+<h3>
+    Students Enrolled in Selected Course
+</h3>
+<table class="table table-dark table-hover">
+    <tr>
+        <th>Name</th>
+        <th>Grade</th>
+    </tr>
+    @foreach (var item in Model.Enrollments)
+    {
+    <tr>
+        <td>
+            @item.Student.FullName
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Grade)
+        </td>
+    </tr>
+    }
+</table>
+}
 }
